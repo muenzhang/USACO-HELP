@@ -4,7 +4,7 @@ using namespace std;
 
 struct p{
     int x1, x2, y1, y2;
-} PCL[50000];
+} PCL[100000];
 
 bool Vis[25][25];
 int N, Counter, Answer;
@@ -34,9 +34,9 @@ bool IsPCL(int x1, int y1, int x2, int y2){
                 return false;
             if (ConnectedBlock1 > 1 && ConnectedBlock2 > 1)
                 return false;
-            if (Photo[i][j] == Color1)
+            if (Photo[i][j] == Color1 && !Vis[i][j])
                 ConnectedBlock1++, Dfs(Color1, i, j, x1, y1, x2, y2);
-            else
+            else if (Photo[i][j] == Color2 && !Vis[i][j])
                 ConnectedBlock2++, Dfs(Color2, i, j, x1, y1, x2, y2);
         }
     if (ConnectedBlock1 == 1 && ConnectedBlock2 > 1 || ConnectedBlock1 > 1 && ConnectedBlock2 == 1)
@@ -46,7 +46,7 @@ bool IsPCL(int x1, int y1, int x2, int y2){
 
 bool Repetition(int x){
     for (int i = 1; i <= Counter; i++)
-        if (i != x && PCL[i].x1 >= PCL[x].x1 && PCL[i].x2 <= PCL[x].x2 && PCL[i].y1 >= PCL[x].y1 && PCL[i].y2 <= PCL[x].y2)
+        if (i != x && PCL[x].x1 >= PCL[i].x1 && PCL[x].x2 <= PCL[i].x2 && PCL[x].y1 >= PCL[i].y1 && PCL[x].y2 <= PCL[i].y2)
             return false;
     return true;
 }
@@ -55,7 +55,7 @@ int main()
 {
     cin >> N;
     for (int i = 1; i <= N; i++)
-        cin >> Photo[i];
+        cin >> Photo[i] + 1;
     for (int i = 1; i <= N; i++)
         for (int j = 1; j <= N; j++)
             for (int k = i; k <= N; k++)
@@ -70,3 +70,14 @@ int main()
     cout << Answer << endl;
     return 0;
 }
+
+/*
+4                                                                                          
+ABBC
+BBBC
+AABB
+ABBC
+
+My output: 5
+Correct : 2
+*/
